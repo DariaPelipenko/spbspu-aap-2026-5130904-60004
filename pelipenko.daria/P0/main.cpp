@@ -1,5 +1,5 @@
 #include <iostream>
-int main() 
+int main()
 {
-  std::cout<<"pelipenko.daria\n";
+    std::cout<<"pelipenko.daria\n";
 }
