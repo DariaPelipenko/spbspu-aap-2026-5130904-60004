@@ -5,13 +5,13 @@
 namespace pelipenko
 {
 
-  int findMaxRun()
+  int findMaxEqualRun()
   {
     long long prev = 0;
     long long curr = 0;
-    bool first = true;
+    bool is_first = true;
     int length = 0;
-    int maxLength = 0;
+    int max_length = 0;
 
     while (true)
     {
@@ -25,12 +25,12 @@ namespace pelipenko
         break;
       }
 
-      if (first)
+      if (is_first)
       {
         prev = curr;
         length = 1;
-        maxLength = 1;
-        first = false;
+        max_length = 1;
+        is_first = false;
         continue;
       }
 
@@ -44,22 +44,22 @@ namespace pelipenko
         prev = curr;
       }
 
-      if (length > maxLength)
+      if (length > max_length)
       {
-        maxLength = length;
+        max_length = length;
       }
     }
 
-    return maxLength;
+    return max_length;
   }
 
-} // namespace pelipenko
+}
 
 int main()
 {
   try
   {
-    const int answer = pelipenko::findMaxRun();
+    const int answer = pelipenko::findMaxEqualRun();
     std::cout << answer << "\n";
     return 0;
   }
