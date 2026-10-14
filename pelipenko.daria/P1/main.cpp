@@ -43,7 +43,7 @@ namespace pelipenko
         length = 1;
         prev = curr;
       }
-      
+
       if (length > max_length)
       {
         max_length = length;
@@ -63,7 +63,7 @@ int main()
     std::cout << answer << "\n";
     return 0;
   }
-  catch (const std::exception& e)
+  catch (const std::exception & e)
   {
     std::cerr << e.what() << "\n";
     return 1;
