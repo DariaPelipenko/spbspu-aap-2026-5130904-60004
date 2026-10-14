@@ -1,6 +1,7 @@
 #include <exception>
 #include <iostream>
 #include <stdexcept>
+#include <climits>
 
 namespace pelipenko
 {
@@ -36,6 +37,10 @@ namespace pelipenko
 
       if (curr == prev)
       {
+        if (length == INT_MAX)
+        {
+          throw std::overflow_error("Error: sequence is too long");
+        }
         ++length;
       }
       else
@@ -62,6 +67,11 @@ int main()
     const int answer = pelipenko::findMaxEqualRun();
     std::cout << answer << "\n";
     return 0;
+  }
+  catch (const std::overflow_error& e)
+  {
+    std::cerr << e.what() << "\n";
+    return 2;
   }
   catch (const std::exception & e)
   {
