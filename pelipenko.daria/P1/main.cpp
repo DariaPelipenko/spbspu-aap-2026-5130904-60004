@@ -1,58 +1,51 @@
-#include <exception>
 #include <iostream>
 #include <stdexcept>
 
 namespace pelipenko
 {
-
   int findMaxEqualRun()
   {
     long long prev = 0;
     long long curr = 0;
-    bool is_first = true;
     int length = 0;
     int max_length = 0;
 
-    while (true)
+    if (std::cin >> prev)
     {
-      if (!(std::cin >> curr))
-      {
-        throw std::invalid_argument("Input is not a sequence of integers");
-      }
+      length = 1;
+      max_length = 1;
 
-      if (curr == 0)
+      while (true)
       {
-        break;
-      }
+        if (!(std::cin >> curr))
+        {
+          throw std::invalid_argument("Input is not a sequence of integers");
+        }
 
-      if (is_first)
-      {
-        prev = curr;
-        length = 1;
-        max_length = 1;
-        is_first = false;
-        continue;
-      }
+        if (curr == 0)
+        {
+          break;
+        }
 
-      if (curr == prev)
-      {
-        ++length;
-      }
-      else
-      {
-        length = 1;
-        prev = curr;
-      }
+        if (curr == prev)
+        {
+          ++length;
+        }
+        else
+        {
+          length = 1;
+          prev = curr;
+        }
 
-      if (length > max_length)
-      {
-        max_length = length;
+        if (length > max_length)
+        {
+          max_length = length;
+        }
       }
     }
 
     return max_length;
   }
-
 }
 
 int main()
@@ -63,7 +56,7 @@ int main()
     std::cout << answer << "\n";
     return 0;
   }
-  catch (const std::exception & e)
+  catch (const std::exception& e)
   {
     std::cerr << e.what() << "\n";
     return 1;
