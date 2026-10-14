@@ -73,7 +73,7 @@ int main()
     std::cerr << e.what() << "\n";
     return 2;
   }
-  catch (const std::exception & e)
+  catch (const std::exception& e)
   {
     std::cerr << e.what() << "\n";
     return 1;
