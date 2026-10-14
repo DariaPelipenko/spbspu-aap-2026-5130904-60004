@@ -1,3 +1,4 @@
+#include <exception>
 #include <iostream>
 #include <stdexcept>
 
@@ -10,37 +11,39 @@ namespace pelipenko
     int length = 0;
     int max_length = 0;
 
-    if (std::cin >> prev)
+    if (!(std::cin >> prev) || prev == 0)
     {
-      length = 1;
-      max_length = 1;
+      return 0;
+    }
 
-      while (true)
+    length = 1;
+    max_length = 1;
+
+    while (true)
+    {
+      if (!(std::cin >> curr))
       {
-        if (!(std::cin >> curr))
-        {
-          throw std::invalid_argument("Input is not a sequence of integers");
-        }
+        throw std::invalid_argument("Input is not a sequence of integers");
+      }
 
-        if (curr == 0)
-        {
-          break;
-        }
+      if (curr == 0)
+      {
+        break;
+      }
 
-        if (curr == prev)
-        {
-          ++length;
-        }
-        else
-        {
-          length = 1;
-          prev = curr;
-        }
+      if (curr == prev)
+      {
+        ++length;
+      }
+      else
+      {
+        length = 1;
+        prev = curr;
+      }
 
-        if (length > max_length)
-        {
-          max_length = length;
-        }
+      if (length > max_length)
+      {
+        max_length = length;
       }
     }
 
