@@ -2,6 +2,7 @@
 #include <fstream>
 #include <new>
 #include <stdexcept>
+#include <cstddef>
 
 namespace pelipenko
 {
@@ -41,7 +42,7 @@ namespace pelipenko
 
 int main(int argc, char* argv[])
 {
-  int* dynamicArray = nullptr;
+  int* dynamicArr = nullptr;
 
   try
   {
@@ -54,7 +55,7 @@ int main(int argc, char* argv[])
     {
       throw std::invalid_argument("First parameter must be 1 or 2");
     }
-
+    
     const int typeArr = argv[1][0] - '0';
 
     std::ifstream input(argv[2]);
@@ -75,7 +76,7 @@ int main(int argc, char* argv[])
       throw std::logic_error("Matrix is too large");
     }
 
-    int fixedArray[pelipenko::MAX_SIZE];
+    int fixedArr[pelipenko::MAX_SIZE];
     int* arr = nullptr;
 
     if (typeArr == 1)
@@ -84,12 +85,12 @@ int main(int argc, char* argv[])
       {
         throw std::logic_error("Matrix does not fit in static array");
       }
-      arr = fixedArray;
+      arr = fixedArr;
     }
     else
     {
-      dynamicArray = new int[n * m];
-      arr = dynamicArray;
+      dynamicArr = new int[n * m];
+      arr = dynamicArr;
     }
 
     pelipenko::readMatrix(input, arr, n, m);
@@ -103,19 +104,19 @@ int main(int argc, char* argv[])
     const bool result = pelipenko::isUpperTriangular(arr, n, m);
     output << (result ? "true" : "false") << '\n';
 
-    delete[] dynamicArray;
-    dynamicArray = nullptr;
+    delete[] dynamicArr;
+    dynamicArr = nullptr;
   }
   catch (const std::invalid_argument& e)
   {
     std::cerr << e.what() << "\n";
-    delete[] dynamicArray;
+    delete[] dynamicArr;
     return 1;
   }
   catch (const std::exception& e)
   {
     std::cerr << e.what() << "\n";
-    delete[] dynamicArray;
+    delete[] dynamicArr;
     return 2;
   }
 
