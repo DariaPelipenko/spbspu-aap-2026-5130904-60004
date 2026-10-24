@@ -55,7 +55,6 @@ int main(int argc, char* argv[])
     {
       throw std::invalid_argument("First parameter must be 1 or 2");
     }
-    
     const int typeArr = argv[1][0] - '0';
 
     std::ifstream input(argv[2]);
