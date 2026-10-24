@@ -1,8 +1,9 @@
 #include <iostream>
 #include <fstream>
 #include <new>
+#include <stdexcept>
 
-namespace pelip
+namespace pelipenko
 {
   const size_t MAX_SIZE = 10000;
 
@@ -25,93 +26,98 @@ namespace pelip
     }
     return true;
   }
+
+  void readMatrix(std::istream& input, int* arr, const size_t n, const size_t m)
+  {
+    for (size_t i = 0; i < n * m; ++i)
+    {
+      if (!(input >> arr[i]))
+      {
+        throw std::logic_error("Not correct matrix elements");
+      }
+    }
+  }
 }
 
 int main(int argc, char* argv[])
 {
-  if (argc != 4)
+  int* dynamicArray = nullptr;
+
+  try
   {
-    std::cerr << "Error: invalid number of arguments.\n";
+    if (argc != 4)
+    {
+      throw std::invalid_argument("Not correct arguments count");
+    }
+
+    if (argv[1][0] == '\0' || (argv[1][0] != '1' && argv[1][0] != '2') || argv[1][1] != '\0')
+    {
+      throw std::invalid_argument("First parameter must be 1 or 2");
+    }
+
+    const int typeArr = argv[1][0] - '0';
+
+    std::ifstream input(argv[2]);
+    if (!input.is_open())
+    {
+      throw std::logic_error("Could not open input file");
+    }
+
+    size_t n = 0;
+    size_t m = 0;
+    if (!(input >> n >> m))
+    {
+      throw std::logic_error("Could not read dimensions");
+    }
+
+    if (m != 0 && n > pelipenko::MAX_SIZE / m)
+    {
+      throw std::logic_error("Matrix is too large");
+    }
+
+    int fixedArray[pelipenko::MAX_SIZE];
+    int* arr = nullptr;
+
+    if (typeArr == 1)
+    {
+      if (n * m > pelipenko::MAX_SIZE)
+      {
+        throw std::logic_error("Matrix does not fit in static array");
+      }
+      arr = fixedArray;
+    }
+    else
+    {
+      dynamicArray = new int[n * m];
+      arr = dynamicArray;
+    }
+
+    pelipenko::readMatrix(input, arr, n, m);
+
+    std::ofstream output(argv[3]);
+    if (!output.is_open())
+    {
+      throw std::logic_error("Could not open output file");
+    }
+
+    const bool result = pelipenko::isUpperTriangular(arr, n, m);
+    output << (result ? "true" : "false") << '\n';
+
+    delete[] dynamicArray;
+    dynamicArray = nullptr;
+  }
+  catch (const std::invalid_argument& e)
+  {
+    std::cerr << e.what() << "\n";
+    delete[] dynamicArray;
     return 1;
   }
-
-  const int typeArr = argv[1][0] - '0';
-  if ((typeArr != 1 && typeArr != 2) || argv[1][1] != '\0')
+  catch (const std::exception& e)
   {
-    std::cerr << "Error: first argument must be 1 or 2.\n";
-    return 1;
-  }
-
-  std::ifstream input(argv[2]);
-  if (!input.is_open())
-  {
-    std::cerr << "Error: could not open input file.\n";
+    std::cerr << e.what() << "\n";
+    delete[] dynamicArray;
     return 2;
   }
-
-  size_t n = 0;
-  size_t m = 0;
-  if (!(input >> n >> m))
-  {
-    std::cerr << "Error: could not read matrix dimensions.\n";
-    return 2;
-  }
-
-  if (m != 0 && n > pelip::MAX_SIZE / m)
-  {
-    std::cerr << "Error: matrix is too large.\n";
-    return 2;
-  }
-
-  int fixArr[pelip::MAX_SIZE];
-  int* arr = nullptr;
-  int* arrd = nullptr;
-
-  if (typeArr == 1)
-  {
-    if (n * m > pelip::MAX_SIZE)
-    {
-      std::cerr << "Error: matrix does not fit in static array.\n";
-      return 2;
-    }
-    arr = fixArr;
-  }
-  else if (typeArr == 2)
-  {
-    try
-    {
-      arrd = new int[n * m];
-      arr = arrd;
-    }
-    catch (const std::bad_alloc&)
-    {
-      std::cerr << "Error: not enough memory.\n";
-      return 2;
-    }
-  }
-
-  for (size_t i = 0; i < n * m; ++i)
-  {
-    if (!(input >> arr[i]))
-    {
-      delete[] arrd;
-      std::cerr << "Error: could not read matrix elements.\n";
-      return 2;
-    }
-  }
-
-  std::ofstream output(argv[3]);
-  if (!output.is_open())
-  {
-    delete[] arrd;
-    std::cerr << "Error: could not open output file.\n";
-    return 2;
-  }
-
-  const bool result = pelip::isUpperTriangular(arr, n, m);
-  output << (result ? "true" : "false") << '\n';
-
-  delete[] arrd;
 
   return 0;
 }
