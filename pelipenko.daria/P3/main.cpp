@@ -8,7 +8,6 @@ const int max_length = 10000;
 
 namespace pelipenko
 {
-
   void read_matrix(std::ifstream & in, int * arr, const std::size_t n, const std::size_t m)
   {
     for (std::size_t i = 0; i < n * m; ++i)
@@ -37,6 +36,7 @@ namespace pelipenko
         }
       }
     }
+
     return true;
   }
 
@@ -47,6 +47,7 @@ namespace pelipenko
     {
       throw std::runtime_error("Could not open output file");
     }
+
     out << (result ? "true" : "false") << '\n';
   }
 }
@@ -100,11 +101,11 @@ int main(int argc, char * argv[])
     try
     {
       matrix = new int[n * m];
-      
+
       pelipenko::read_matrix(in, matrix, n, m);
       result = pelipenko::is_upper_triangular(matrix, n, m);
       pelipenko::output_matrix(argv[3], result);
-      
+
       delete[] matrix;
     }
     catch (const std::bad_alloc & e)
