@@ -1,24 +1,35 @@
-#include <iostream>
+#include <cstddef>
 #include <fstream>
+#include <iostream>
 #include <new>
 #include <stdexcept>
-#include <cstddef>
-#include <exception>
+
+const int max_length = 10000;
 
 namespace pelipenko
 {
-  const size_t MAX_SIZE = 10000;
 
-  bool isUpperTriangular(const int* arr, const size_t n, const size_t m)
+  void read_matrix(std::ifstream & in, int * arr, const std::size_t n, const std::size_t m)
+  {
+    for (std::size_t i = 0; i < n * m; ++i)
+    {
+      if (!(in >> arr[i]))
+      {
+        throw std::invalid_argument("Input error");
+      }
+    }
+  }
+
+  bool is_upper_triangular(const int * arr, const std::size_t n, const std::size_t m)
   {
     if (n != m)
     {
       return false;
     }
 
-    for (size_t i = 0; i < n; ++i)
+    for (std::size_t i = 0; i < n; ++i)
     {
-      for (size_t j = 0; j < m; ++j)
+      for (std::size_t j = 0; j < m; ++j)
       {
         if (i > j && arr[i * m + j] != 0)
         {
@@ -26,99 +37,92 @@ namespace pelipenko
         }
       }
     }
+
     return true;
   }
 
-  void readMatrix(std::istream& input, int* arr, const size_t n, const size_t m)
+  void output_matrix(const char * file, const bool result)
   {
-    for (size_t i = 0; i < n * m; ++i)
+    std::ofstream out(file);
+    if (!out.is_open())
     {
-      if (!(input >> arr[i]))
-      {
-        throw std::logic_error("Not correct matrix elements");
-      }
+      throw std::runtime_error("Could not open output file");
     }
+
+    out << (result ? "true" : "false") << '\n';
   }
 }
 
-int main(int argc, char* argv[])
+int main(int argc, char * argv[])
 {
-  int* dynamic_arr = nullptr;
-
-  try
+  if (argc != 4 || (*argv[1] != '1' && *argv[1] != '2') || argv[1][1] != '\0')
   {
-    if (argc != 4)
-    {
-      throw std::invalid_argument("Not correct arguments count");
-    }
-
-    if (argv[1][0] == '\0' || (argv[1][0] != '1' && argv[1][0] != '2') || argv[1][1] != '\0')
-    {
-      throw std::invalid_argument("First parameter must be 1 or 2");
-    }
-    const int type_arr = argv[1][0] - '0';
-
-    std::ifstream input(argv[2]);
-    if (!input.is_open())
-    {
-      throw std::logic_error("Could not open input file");
-    }
-
-    size_t n = 0;
-    size_t m = 0;
-    if (!(input >> n >> m))
-    {
-      throw std::logic_error("Could not read dimensions");
-    }
-
-    if (m != 0 && n > pelipenko::MAX_SIZE / m)
-    {
-      throw std::logic_error("Matrix is too large");
-    }
-
-    int fixed_arr[pelipenko::MAX_SIZE];
-    int* arr = nullptr;
-
-    if (type_arr == 1)
-    {
-      if (n * m > pelipenko::MAX_SIZE)
-      {
-        throw std::logic_error("Matrix does not fit in static array");
-      }
-      arr = fixed_arr;
-    }
-    else
-    {
-      dynamic_arr = new int[n * m];
-      arr = dynamic_arr;
-    }
-
-    pelipenko::readMatrix(input, arr, n, m);
-
-    std::ofstream output(argv[3]);
-    if (!output.is_open())
-    {
-      throw std::logic_error("Could not open output file");
-    }
-
-    const bool result = pelipenko::isUpperTriangular(arr, n, m);
-    output << (result ? "true" : "false") << '\n';
-
-    delete[] dynamic_arr;
-    dynamic_arr = nullptr;
-  }
-  catch (const std::invalid_argument& e)
-  {
-    std::cerr << e.what() << "\n";
-    delete[] dynamic_arr;
+    std::cerr << "Invalid argument\n";
     return 1;
   }
-  catch (const std::exception& e)
+
+  int n = 0;
+  int m = 0;
+
+  std::ifstream in(argv[2]);
+  if (!in || !(in >> n >> m) || n < 0 || m < 0)
   {
-    std::cerr << e.what() << "\n";
-    delete[] dynamic_arr;
+    std::cerr << "Input error\n";
     return 2;
   }
 
+  bool result = false;
+
+  if (*argv[1] == '1')
+  {
+    if (n * m > max_length)
+    {
+      std::cerr << "Input error\n";
+      return 2;
+    }
+
+    int matrix[max_length] = {};
+
+    try
+    {
+      pelipenko::read_matrix(in, matrix, n, m);
+      result = pelipenko::is_upper_triangular(matrix, n, m);
+      pelipenko::output_matrix(argv[3], result);
+    }
+    catch (const std::exception & e)
+    {
+      std::cerr << e.what() << '\n';
+      return 2;
+    }
+  }
+  else if (*argv[1] == '2')
+  {
+    int * matrix = nullptr;
+
+    try
+    {
+      matrix = new int[n * m];
+      
+      pelipenko::read_matrix(in, matrix, n, m);
+      result = pelipenko::is_upper_triangular(matrix, n, m);
+      pelipenko::output_matrix(argv[3], result);
+      
+      delete[] matrix;
+    }
+    catch (const std::bad_alloc & e)
+    {
+      delete[] matrix;
+      std::cerr << e.what() << '\n';
+      return 2;
+    }
+    catch (const std::exception & e)
+    {
+      delete[] matrix;
+      std::cerr << e.what() << '\n';
+      return 2;
+    }
+  }
+
+  in.close();
   return 0;
 }
