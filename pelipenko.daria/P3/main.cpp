@@ -17,6 +17,12 @@ namespace pelipenko
         throw std::invalid_argument("Input error");
       }
     }
+
+    int extra_element = 0;
+    if (in >> extra_element)
+    {
+      throw std::invalid_argument("Input error");
+    }
   }
 
   bool isUpperTriangular(const int * arr, const std::size_t n, const std::size_t m)
