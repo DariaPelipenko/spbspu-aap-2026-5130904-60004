@@ -8,7 +8,7 @@ const int max_length = 10000;
 
 namespace pelipenko
 {
-  void read_matrix(std::ifstream & in, int * arr, const std::size_t n, const std::size_t m)
+  void readMatrix(std::ifstream & in, int * arr, const std::size_t n, const std::size_t m)
   {
     for (std::size_t i = 0; i < n * m; ++i)
     {
@@ -19,7 +19,7 @@ namespace pelipenko
     }
   }
 
-  bool is_upper_triangular(const int * arr, const std::size_t n, const std::size_t m)
+  bool isUpperTriangular(const int * arr, const std::size_t n, const std::size_t m)
   {
     if (n != m)
     {
@@ -40,7 +40,7 @@ namespace pelipenko
     return true;
   }
 
-  void output_matrix(const char * file, const bool result)
+  void outputMatrix(const char * file, const bool result)
   {
     std::ofstream out(file);
     if (!out.is_open())
@@ -84,9 +84,9 @@ int main(int argc, char * argv[])
 
     try
     {
-      pelipenko::read_matrix(in, matrix, n, m);
-      result = pelipenko::is_upper_triangular(matrix, n, m);
-      pelipenko::output_matrix(argv[3], result);
+      pelipenko::readMatrix(in, matrix, n, m);
+      result = pelipenko::isUpperTriangular(matrix, n, m);
+      pelipenko::outputMatrix(argv[3], result);
     }
     catch (const std::exception & e)
     {
@@ -102,9 +102,9 @@ int main(int argc, char * argv[])
     {
       matrix = new int[n * m];
 
-      pelipenko::read_matrix(in, matrix, n, m);
-      result = pelipenko::is_upper_triangular(matrix, n, m);
-      pelipenko::output_matrix(argv[3], result);
+      pelipenko::readMatrix(in, matrix, n, m);
+      result = pelipenko::isUpperTriangular(matrix, n, m);
+      pelipenko::outputMatrix(argv[3], result);
 
       delete[] matrix;
     }
