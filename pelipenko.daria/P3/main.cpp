@@ -37,7 +37,6 @@ namespace pelipenko
         }
       }
     }
-
     return true;
   }
 
@@ -48,7 +47,6 @@ namespace pelipenko
     {
       throw std::runtime_error("Could not open output file");
     }
-
     out << (result ? "true" : "false") << '\n';
   }
 }
