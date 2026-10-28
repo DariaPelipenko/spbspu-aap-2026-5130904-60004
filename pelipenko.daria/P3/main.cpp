@@ -80,7 +80,7 @@ int main(int argc, char * argv[])
 
   if (*argv[1] == '1')
   {
-    if (n * m > max_length)
+    if (m!=0 && n > max_length / m)
     {
       std::cerr << "Input error\n";
       return 2;
