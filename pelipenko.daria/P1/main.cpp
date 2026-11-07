@@ -8,46 +8,43 @@ namespace pelipenko
   class MaxEqualCounter
   {
   public:
-    MaxEqualCounter()
-      : max_length(0),
-        length(0),
-        prev(0)
+    MaxEqualCounter() : max_length_(0), length_(0), prev_(0)
     {
     }
 
     void operator()(long long curr)
     {
-      if (length == 0)
+      if (length_ == 0)
       {
-        length = 1;
-        max_length = 1;
+        length_ = 1;
+        max_length_ = 1;
       }
 
-      if (curr == prev)
+      if (curr == prev_)
       {
-        ++length;
+        ++length_;
       }
       else
       {
-        length = 1;
-        prev = curr;
+        length_ = 1;
+        prev_ = curr;
       }
 
-      if (length > max_length)
+      if (length_ > max_length_)
       {
-        max_length = length;
+        max_length_ = length_;
       }
     }
 
     int operator()() const
     {
-      return max_length;
+      return max_length_;
     }
 
   private:
-    int max_length;
-    int length;
-    long long prev;
+    int max_length_;
+    int length_;
+    long long prev_;
   };
 
 }
