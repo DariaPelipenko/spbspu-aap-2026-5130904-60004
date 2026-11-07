@@ -8,7 +8,10 @@ namespace pelipenko
   class MaxEqualCounter
   {
   public:
-    MaxEqualCounter() : max_length_(0), length_(0), prev_(0)
+    MaxEqualCounter():
+      max_length_(0),
+      length_(0),
+      prev_(0)
     {
     }
 
