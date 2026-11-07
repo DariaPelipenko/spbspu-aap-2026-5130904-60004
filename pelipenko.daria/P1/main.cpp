@@ -12,8 +12,7 @@ namespace pelipenko
       max_length_(0),
       length_(0),
       prev_(0)
-    {
-    }
+    {}
 
     void operator()(long long curr)
     {
