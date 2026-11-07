@@ -4,16 +4,16 @@
 
 namespace pelipenko
 {
-  char * getStr(std::istream & in);
-  char * getCommon(const char * str1, const char * str2);
-  std::size_t getLen(const char * str);
+  char* getStr(std::istream& in);
+  char* getCommon(const char* str1, const char* str2);
+  std::size_t getLen(const char* str);
 }
 
 int main()
 {
-  char * str1 = nullptr;
-  char * res = nullptr;
-  const char * const str2 = "def_ghk";
+  char* str1 = nullptr;
+  char* res = nullptr;
+  const char* const str2 = "def_ghk";
 
   try
   {
@@ -33,7 +33,7 @@ int main()
     delete[] res;
     return 0;
   }
-  catch (const std::bad_alloc &)
+  catch (const std::bad_alloc&)
   {
     std::cerr << "Memory error\n";
     delete[] str1;
@@ -43,7 +43,7 @@ int main()
 
 namespace pelipenko
 {
-  std::size_t getLen(const char * str)
+  std::size_t getLen(const char* str)
   {
     std::size_t len = 0;
     while (str[len] != '\0')
@@ -53,12 +53,12 @@ namespace pelipenko
     return len;
   }
 
-  char * getStr(std::istream & in)
+  char* getStr(std::istream& in)
   {
     const std::size_t start_size = 16;
     std::size_t cap = start_size;
     std::size_t len = 0;
-    char * buf = new char[cap];
+    char* buf = new char[cap];
     char ch = 0;
 
     while (in.get(ch) && ch != '\n')
@@ -66,7 +66,7 @@ namespace pelipenko
       if (len + 1 >= cap)
       {
         cap *= 2;
-        char * const new_buf = new char[cap];
+        char* const new_buf = new char[cap];
 
         for (std::size_t k = 0; k < len; ++k)
         {
@@ -84,13 +84,13 @@ namespace pelipenko
     return buf;
   }
 
-  char * getCommon(const char * str1, const char * str2)
+  char* getCommon(const char* str1, const char* str2)
   {
     const std::size_t len1 = getLen(str1);
     const std::size_t len2 = getLen(str2);
     std::size_t pos = 0;
 
-    char * const out = new char[len2 + 1];
+    char* const out = new char[len2 + 1];
 
     for (std::size_t i = 0; str2[i] != '\0'; ++i)
     {
