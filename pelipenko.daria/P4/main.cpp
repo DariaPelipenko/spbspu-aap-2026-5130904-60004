@@ -86,7 +86,6 @@ namespace pelipenko
 
   char* getCommon(const char* str1, const char* str2)
   {
-    const std::size_t len1 = getLen(str1);
     const std::size_t len2 = getLen(str2);
     std::size_t pos = 0;
 
@@ -94,20 +93,34 @@ namespace pelipenko
 
     for (std::size_t i = 0; str2[i] != '\0'; ++i)
     {
-      std::size_t diff = 0;
+      bool found = false;
 
       for (std::size_t j = 0; str1[j] != '\0'; ++j)
       {
-        if (str2[i] != str1[j])
+        if (str2[i] == str1[j])
         {
-          ++diff;
+          found = true;
+          break;
         }
       }
 
-      if (diff == len1)
+      if (found)
       {
-        out[pos] = str2[i];
-        ++pos;
+        bool already_added = false;
+        for (std::size_t k = 0; k < pos; ++k)
+        {
+          if (out[k] == str2[i])
+          {
+            already_added = true;
+            break;
+          }
+        }
+
+        if (!already_added)
+        {
+          out[pos] = str2[i];
+          ++pos;
+        }
       }
     }
 
