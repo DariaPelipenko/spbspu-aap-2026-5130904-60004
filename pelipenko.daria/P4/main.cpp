@@ -1,0 +1,117 @@
+#include <cstddef>
+#include <iostream>
+#include <new>
+
+namespace pelipenko
+{
+  char * get_str(std::istream & in);
+  char * get_common(const char * str1, const char * str2);
+  std::size_t get_len(const char * str);
+}
+
+int main()
+{
+  char * str1 = nullptr;
+  char * res = nullptr;
+  const char * const str2 = "def_ghk";
+
+  try
+  {
+    str1 = pelipenko::get_str(std::cin);
+
+    if (pelipenko::get_len(str1) == 0)
+    {
+      std::cerr << "Error: Empty input\n";
+      delete[] str1;
+      return 1;
+    }
+
+    res = pelipenko::get_common(str1, str2);
+    std::cout << res << '\n';
+
+    delete[] str1;
+    delete[] res;
+    return 0;
+  }
+  catch (const std::bad_alloc &)
+  {
+    std::cerr << "Memory error\n";
+    delete[] str1;
+    return 1;
+  }
+}
+
+namespace pelipenko
+{
+  std::size_t get_len(const char * str)
+  {
+    std::size_t len = 0;
+    while (str[len] != '\0')
+    {
+      ++len;
+    }
+    return len;
+  }
+
+  char * get_str(std::istream & in)
+  {
+    const std::size_t start_size = 16;
+    std::size_t cap = start_size;
+    std::size_t len = 0;
+    char * buf = new char[cap];
+    char ch = 0;
+
+    while (in.get(ch) && ch != '\n')
+    {
+      if (len + 1 >= cap)
+      {
+        cap *= 2;
+        char * new_buf = new char[cap];
+
+        for (std::size_t k = 0; k < len; ++k)
+        {
+          new_buf[k] = buf[k];
+        }
+
+        delete[] buf;
+        buf = new_buf;
+      }
+      buf[len] = ch;
+      ++len;
+    }
+
+    buf[len] = '\0';
+    return buf;
+  }
+
+  char * get_common(const char * str1, const char * str2)
+  {
+    const std::size_t len1 = get_len(str1);
+    const std::size_t len2 = get_len(str2);
+    std::size_t pos = 0;
+
+    char * out = new char[len2 + 1];
+
+    for (std::size_t i = 0; str2[i] != '\0'; ++i)
+    {
+      std::size_t diff = 0;
+
+      for (std::size_t j = 0; str1[j] != '\0'; ++j)
+      {
+        if (str2[i] != str1[j])
+        {
+          ++diff;
+        }
+      }
+
+      if (diff == len1)
+      {
+        out[pos] = str2[i];
+        ++pos;
+      }
+    }
+
+    out[pos] = '\0';
+    return out;
+  }
+}
