@@ -64,13 +64,13 @@ void pelipenko::getCommonLetters(const char* str1, const char* str2, char* out)
 
   for (std::size_t i = 0; str2[i] != '\0'; ++i)
   {
-    if (std::isalpha(static_cast<unsigned char>(str2[i])))
+    if (std::isalpha(static_cast<unsigned char >(str2[i])))
     {
-      const char lower_ch = std::tolower(static_cast<unsigned char>(str2[i]));
+      const char lower_ch = std::tolower(static_cast<unsigned char >(str2[i]));
 
       for (std::size_t j = 0; str1[j] != '\0'; ++j)
       {
-        const char current_ch = std::tolower(static_cast<unsigned char>(str1[j]));
+        const char current_ch = std::tolower(static_cast<unsigned char >(str1[j]));
 
         if (current_ch == lower_ch)
         {
@@ -87,7 +87,7 @@ void pelipenko::getCommonLetters(const char* str1, const char* str2, char* out)
   {
     if (found_letters[i])
     {
-      out[pos] = static_cast<char>('a' + i);
+      out[pos] = static_cast<char >('a' + i);
       ++pos;
     }
   }
