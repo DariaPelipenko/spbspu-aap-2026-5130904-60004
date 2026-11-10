@@ -4,10 +4,8 @@
 
 namespace pelipenko
 {
-
-  class MaxEqualCounter
+  struct MaxEqualCounter
   {
-  public:
     MaxEqualCounter():
       max_length_(0),
       length_(0),
@@ -47,9 +45,8 @@ namespace pelipenko
     int max_length_;
     int length_;
     long long prev_;
-  };
-
-}
+  }; 
+} 
 
 int main()
 {
@@ -76,7 +73,7 @@ int main()
     std::cout << counter() << "\n";
     return 0;
   }
-  catch (const std::exception & e)
+  catch (const std::exception& e)
   {
     std::cerr << e.what() << "\n";
     return 1;
