@@ -4,7 +4,8 @@
 
 namespace pelipenko
 {
-  char* getStr(std::istream& in, char* buf, std::size_t max_size);
+  void getStr(std::istream& in, char* buf, std::size_t max_size);
+  std::size_t getLen(const char* str);
   void getCommonLetters(const char* str1, const char* str2, char* out);
 }
 
@@ -15,22 +16,22 @@ int main()
   char res[MAX_SIZE] = {0};
   const char* const str2 = "def_ghk";
 
-  char* input_ptr = pelipenko::getStr(std::cin, str1, MAX_SIZE);
+  pelipenko::getStr(std::cin, str1, MAX_SIZE);
 
-  if (input_ptr == nullptr)
+  if (pelipenko::getLen(str1) == 0)
   {
     std::cerr << "Error: Empty input\n";
     return 1;
   }
 
   pelipenko::getCommonLetters(str1, str2, res);
-  
+
   std::cout << res << '\n';
 
   return 0;
 }
 
-char* pelipenko::getStr(std::istream& in, char* buf, std::size_t max_size)
+void pelipenko::getStr(std::istream& in, char* buf, std::size_t max_size)
 {
   std::size_t len = 0;
   char ch = 0;
@@ -42,8 +43,18 @@ char* pelipenko::getStr(std::istream& in, char* buf, std::size_t max_size)
   }
 
   buf[len] = '\0';
-  
-  return buf;
+}
+
+std::size_t pelipenko::getLen(const char* str)
+{
+  std::size_t len = 0;
+
+  while (str[len] != '\0')
+  {
+    ++len;
+  }
+
+  return len;
 }
 
 void pelipenko::getCommonLetters(const char* str1, const char* str2, char* out)
@@ -56,11 +67,11 @@ void pelipenko::getCommonLetters(const char* str1, const char* str2, char* out)
     if (std::isalpha(static_cast<unsigned char>(str2[i])))
     {
       const char lower_ch = std::tolower(static_cast<unsigned char>(str2[i]));
-      
+
       for (std::size_t j = 0; str1[j] != '\0'; ++j)
       {
         const char current_ch = std::tolower(static_cast<unsigned char>(str1[j]));
-        
+
         if (current_ch == lower_ch)
         {
           found_letters[lower_ch - 'a'] = true;
@@ -71,7 +82,7 @@ void pelipenko::getCommonLetters(const char* str1, const char* str2, char* out)
   }
 
   std::size_t pos = 0;
-  
+
   for (std::size_t i = 0; i < ALPHABET_SIZE; ++i)
   {
     if (found_letters[i])
@@ -80,6 +91,6 @@ void pelipenko::getCommonLetters(const char* str1, const char* str2, char* out)
       ++pos;
     }
   }
-  
+
   out[pos] = '\0';
 }
