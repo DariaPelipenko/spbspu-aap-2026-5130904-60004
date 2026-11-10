@@ -45,8 +45,8 @@ namespace pelipenko
     int max_length_;
     int length_;
     long long prev_;
-  }; 
-} 
+  };
+}
 
 int main()
 {
