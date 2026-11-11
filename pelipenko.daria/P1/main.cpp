@@ -50,7 +50,7 @@ namespace pelipenko
   {
     return max_length_;
   }
-} 
+}
 
 int main()
 {
