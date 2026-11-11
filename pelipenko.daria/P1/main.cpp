@@ -6,47 +6,51 @@ namespace pelipenko
 {
   struct MaxEqualCounter
   {
-    MaxEqualCounter():
-      max_length_(0),
-      length_(0),
-      prev_(0)
-    {}
-
-    void operator()(long long curr)
-    {
-      if (length_ == 0)
-      {
-        length_ = 1;
-        max_length_ = 1;
-      }
-
-      if (curr == prev_)
-      {
-        ++length_;
-      }
-      else
-      {
-        length_ = 1;
-        prev_ = curr;
-      }
-
-      if (length_ > max_length_)
-      {
-        max_length_ = length_;
-      }
-    }
-
-    int operator()() const
-    {
-      return max_length_;
-    }
+    MaxEqualCounter();
+    void operator()(long long curr);
+    int operator()() const;
 
   private:
     int max_length_;
     int length_;
     long long prev_;
   };
-}
+
+  MaxEqualCounter::MaxEqualCounter():
+    max_length_(0),
+    length_(0),
+    prev_(0)
+  {}
+
+  void MaxEqualCounter::operator()(long long curr)
+  {
+    if (length_ == 0)
+    {
+      length_ = 1;
+      max_length_ = 1;
+    }
+
+    if (curr == prev_)
+    {
+      ++length_;
+    }
+    else
+    {
+      length_ = 1;
+      prev_ = curr;
+    }
+
+    if (length_ > max_length_)
+    {
+      max_length_ = length_;
+    }
+  }
+
+  int MaxEqualCounter::operator()() const
+  {
+    return max_length_;
+  }
+} 
 
 int main()
 {
