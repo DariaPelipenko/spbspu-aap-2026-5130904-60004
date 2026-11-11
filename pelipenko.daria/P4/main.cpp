@@ -1,96 +1,130 @@
-#include <iostream>
 #include <cstddef>
-#include <cctype>
+#include <iostream>
+#include <new>
 
 namespace pelipenko
 {
-  void getStr(std::istream& in, char* buf, std::size_t max_size);
+  char* getStr(std::istream& in);
+  char* getCommon(const char* str1, const char* str2);
   std::size_t getLen(const char* str);
-  void getCommonLetters(const char* str1, const char* str2, char* out);
 }
 
 int main()
 {
-  const std::size_t MAX_SIZE = 1000;
-  char str1[MAX_SIZE] = {0};
-  char res[MAX_SIZE] = {0};
+  char* str1 = nullptr;
+  char* res = nullptr;
   const char* const str2 = "def_ghk";
 
-  pelipenko::getStr(std::cin, str1, MAX_SIZE);
-
-  if (pelipenko::getLen(str1) == 0)
+  try
   {
-    std::cerr << "Error: Empty input\n";
+    str1 = pelipenko::getStr(std::cin);
+
+    if (pelipenko::getLen(str1) == 0)
+    {
+      std::cerr << "Error: Empty input\n";
+      delete[] str1;
+      return 1;
+    }
+
+    res = pelipenko::getCommon(str1, str2);
+    std::cout << res << '\n';
+
+    delete[] str1;
+    delete[] res;
+    return 0;
+  }
+  catch (const std::bad_alloc&)
+  {
+    std::cerr << "Memory error\n";
+    delete[] str1;
     return 1;
   }
-
-  pelipenko::getCommonLetters(str1, str2, res);
-
-  std::cout << res << '\n';
-
-  return 0;
 }
 
-void pelipenko::getStr(std::istream& in, char* buf, std::size_t max_size)
+namespace pelipenko
 {
-  std::size_t len = 0;
-  char ch = 0;
-
-  while (in.get(ch) && ch != '\n' && (len + 1) < max_size)
+  std::size_t getLen(const char* str)
   {
-    buf[len] = ch;
-    ++len;
-  }
-
-  buf[len] = '\0';
-}
-
-std::size_t pelipenko::getLen(const char* str)
-{
-  std::size_t len = 0;
-
-  while (str[len] != '\0')
-  {
-    ++len;
-  }
-
-  return len;
-}
-
-void pelipenko::getCommonLetters(const char* str1, const char* str2, char* out)
-{
-  const std::size_t ALPHABET_SIZE = 26;
-  bool found_letters[ALPHABET_SIZE] = {false};
-
-  for (std::size_t i = 0; str2[i] != '\0'; ++i)
-  {
-    if (std::isalpha(static_cast< unsigned char >(str2[i])))
+    std::size_t len = 0;
+    while (str[len] != '\0')
     {
-      const char lower_ch = std::tolower(static_cast< unsigned char >(str2[i]));
+      ++len;
+    }
+    return len;
+  }
+
+  char* getStr(std::istream& in)
+  {
+    const std::size_t start_size = 16;
+    std::size_t cap = start_size;
+    std::size_t len = 0;
+    char* buf = new char[cap];
+    char ch = 0;
+
+    while (in.get(ch) && ch != '\n')
+    {
+      if (len + 1 >= cap)
+      {
+        cap *= 2;
+        char* const new_buf = new char[cap];
+
+        for (std::size_t k = 0; k < len; ++k)
+        {
+          new_buf[k] = buf[k];
+        }
+
+        delete[] buf;
+        buf = new_buf;
+      }
+      buf[len] = ch;
+      ++len;
+    }
+
+    buf[len] = '\0';
+    return buf;
+  }
+
+  char* getCommon(const char* str1, const char* str2)
+  {
+    const std::size_t len2 = getLen(str2);
+    std::size_t pos = 0;
+
+    char* const out = new char[len2 + 1];
+
+    for (std::size_t i = 0; str2[i] != '\0'; ++i)
+    {
+      bool found = false;
 
       for (std::size_t j = 0; str1[j] != '\0'; ++j)
       {
-        const char current_ch = std::tolower(static_cast< unsigned char >(str1[j]));
-
-        if (current_ch == lower_ch)
+        if (str2[i] == str1[j])
         {
-          found_letters[lower_ch - 'a'] = true;
+          found = true;
           break;
         }
       }
+
+      if (found)
+      {
+        bool already_added = false;
+        for (std::size_t k = 0; k < pos; ++k)
+        {
+          if (out[k] == str2[i])
+          {
+            already_added = true;
+            break;
+          }
+        }
+
+        if (!already_added)
+        {
+          out[pos] = str2[i];
+          ++pos;
+        }
+      }
     }
+
+    out[pos] = '\0';
+    return out;
   }
-
-  std::size_t pos = 0;
-
-  for (std::size_t i = 0; i < ALPHABET_SIZE; ++i)
-  {
-    if (found_letters[i])
-    {
-      out[pos] = static_cast< char >('a' + i);
-      ++pos;
-    }
-  }
-
-  out[pos] = '\0';
 }
